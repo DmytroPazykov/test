@@ -1,0 +1,65 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.qameta.allure:allure-gradle:2.5"
+        classpath "io.franzbecker:gradle-lombok:1.14"
+    }
+}
+
+allprojects {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'io.franzbecker.gradle-lombok'
+
+    ext {
+        commonApache = "3.7"
+        restAssuredVersion = "3.1.0"
+        junitVersion = "5.1.0"
+        junitPlatform = "1.2.0"
+        jacksonDatabindVersion = "2.9.5"
+        allureRestAssured = "2.6.0"
+        log4j = "2.11.1"
+        logback = "1.2.3"
+    }
+
+    sourceCompatibility = 1.8
+
+    dependencies {
+        compile("org.slf4j:slf4j-api:1.7.25")
+        compile("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion",
+                "org.apache.logging.log4j:log4j-core:$log4j",
+                "org.apache.logging.log4j:log4j-api:$log4j",
+                "org.apache.commons:commons-lang3:$commonApache",
+                "org.junit.jupiter:junit-jupiter-api:$junitVersion",
+                "org.junit.platform:junit-platform-launcher:$junitPlatform",
+                "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
+                "org.junit.jupiter:junit-jupiter-params:$junitVersion",
+                "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion",
+                "ch.qos.logback:logback-classic:$logback",
+                "ch.qos.logback:logback-core:$logback",
+                "io.qameta.allure:allure-rest-assured:$allureRestAssured")
+
+        compile("io.rest-assured:rest-assured:$restAssuredVersion") {
+            exclude group: 'org.apache.commons'
+        }
+    }
+
+//  Force all test run as 'clean test'
+//    test.dependsOn 'cleanTest'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.9'
+}
+
